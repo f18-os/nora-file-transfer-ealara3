@@ -62,14 +62,31 @@ class ClientThread(Thread):
 
        fs = FramedStreamSock(s, debug=debug)
 
+      # file = open("Text.txt","r")
+      # r = file.read()
+      # r = r.encode()
 
-       print("sending hello world")
-       fs.sendmsg(b"hello world")
+       file = open("Text.txt", 'r')
+
+       # r = file.read().split('\n')
+       r = file.read()
+       r = r.replace('\n', '\0')  # It is not accepting the \n so I switch it to null which is \0 and still be aware of where is the next line
+       file.close()
+
+       r = "Text.txt" + '//NAME//' + r  # I add this to send the name of the document attached to the file so we can put the same file name and I put this sign to show where I'll be separating this
+       Newr = r.encode()  # making the file in binary so I can send it
+
+
+       print("sending ",Newr)
+       print("sending ", Newr)                 #Another call to see if works
+       #print("sending hello world")
+       #fs.sendmsg(b"hello world")
+       fs.sendmsg(Newr)
        print("received:", fs.receivemsg())
+       #print("HERE")
+       #fs.sendmsg(b"hello world")
+       #print("received:", fs.receivemsg())
 
-       fs.sendmsg(b"hello world")
-       print("received:", fs.receivemsg())
-
-for i in range(100):
+for i in range(2):
     ClientThread(serverHost, serverPort, debug)
 
