@@ -36,12 +36,13 @@ class ServerThread(Thread):
                 if self.debug: print(self.fsock, "server thread done")
                 return
 
-            mutex.acquire()                                                     #wait for this process finish
+            #mutex.acquire()                                                     #wait for this process finish
             NewFile = msg.decode().replace("\x00", "\n") #go back to normal
             Separated = NewFile.split("//NAME//")
             try:                                                                #if File exist then need to change the name
                 l = open(Separated[0], "r")
                 l.close()
+                mutex.acquire()
                 ChangeName = Separated[0].split(".")
                 RC = str(ServerThread.requestCount)
                 NewName = ChangeName[0]+"("+RC+")"+"."+ChangeName[1]
@@ -64,7 +65,7 @@ class ServerThread(Thread):
                 doc.write(Separated[1])
                 doc.close()
 
-                mutex.release()
+                #mutex.release()
 
                 requestNum = ServerThread.requestCount
                 time.sleep(0.001)

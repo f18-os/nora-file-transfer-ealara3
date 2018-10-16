@@ -87,6 +87,6 @@ class ClientThread(Thread):
        #fs.sendmsg(b"hello world")
        #print("received:", fs.receivemsg())
 
-for i in range(2):
+for i in range(100):
     ClientThread(serverHost, serverPort, debug)
 
