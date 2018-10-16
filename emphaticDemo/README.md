@@ -1,0 +1,1 @@
+This lab is using the mutex to stop processes once it gets a repeated name to switch names and then it return to work as normally.
