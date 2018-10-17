@@ -66,27 +66,47 @@ class ClientThread(Thread):
       # r = file.read()
       # r = r.encode()
 
-       file = open("Text.txt", 'r')
+       file = open("Text2.txt", 'r')
 
        # r = file.read().split('\n')
        r = file.read()
        r = r.replace('\n', '\0')  # It is not accepting the \n so I switch it to null which is \0 and still be aware of where is the next line
        file.close()
 
-       r = "Text.txt" + '//NAME//' + r  # I add this to send the name of the document attached to the file so we can put the same file name and I put this sign to show where I'll be separating this
-       Newr = r.encode()  # making the file in binary so I can send it
+       r = "Text2.txt" + '//NAME//' +" "+ r+" //FINISH!"  # I add this to send the name of the document attached to the file so we can put the same file name and I put this sign to show where I'll be separating this
+       r = r.split(" ")
+       #for x in r:
+       #  Newr = x.encode()  # making the file in binary so I can send it
 
 
-       print("sending ",Newr)
-       print("sending ", Newr)                 #Another call to see if works
+       #for x in range(len(Newr)):
+        #   print("here")
+
+
+
+       print("sending ",r)
+       print("sending ", r)                 #Another call to see if works
        #print("sending hello world")
        #fs.sendmsg(b"hello world")
-       fs.sendmsg(Newr)
+       Newr =''
+       x = 0
+       for x in range(len(r)):
+           Newr += r[x]+" "
+           if (x%100)==0:
+               if x != 0:
+                   print("This is Sending = ",Newr," AND X ",x)
+                   fs.sendmsg(Newr.encode())
+       #print("This is X",x," ",Newr)
+       if (x+1) == len(r):
+           #print("This is X!!!!!",x)
+           print("This is Sending 2 =", Newr)
+           fs.sendmsg(Newr.encode())
+
        print("received:", fs.receivemsg())
        #print("HERE")
        #fs.sendmsg(b"hello world")
        #print("received:", fs.receivemsg())
 
-for i in range(100):
+for i in range(2):
     ClientThread(serverHost, serverPort, debug)
 

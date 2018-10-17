@@ -29,20 +29,32 @@ class ServerThread(Thread):
         Thread.__init__(self, daemon=True)
         self.fsock, self.debug = FramedStreamSock(sock, debug), debug
         self.start()
+       
     def run(self):
         while True:
-            msg = self.fsock.receivemsg()
-            if not msg:
-                if self.debug: print(self.fsock, "server thread done")
-                return
+            X= True
+            msg =''
+            while X:
+                if msg is not None:
+                    msg += self.fsock.receivemsg().decode()+" "
+                print("Printing Message !!!!!!!!!!!! =",msg)
+                if not msg:
+                    if self.debug: print(self.fsock, "server thread done")
+                    return
+                if("//FINISH!" in msg):
+                    X = False
+
+               # msg =msg.decode()
+                #msg+=" "
 
             #mutex.acquire()                                                     #wait for this process finish
-            NewFile = msg.decode().replace("\x00", "\n") #go back to normal
+            NewFile = msg.replace("\x00", "\n") #go back to normal
             Separated = NewFile.split("//NAME//")
             try:                                                                #if File exist then need to change the name
                 l = open(Separated[0], "r")
                 l.close()
                 mutex.acquire()
+                print("HERE!!!!!!!",Separated)
                 ChangeName = Separated[0].split(".")
                 RC = str(ServerThread.requestCount)
                 NewName = ChangeName[0]+"("+RC+")"+"."+ChangeName[1]
